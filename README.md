@@ -49,7 +49,7 @@ The other was developing a native app for communicating with the server directly
 
 So I thought about importing just the parts of OpenSSL I would need to barely establish the HTTPS connection.
 
-But then it occurred to me that I was perhaps out of my place. What if, by trying to develop such an app, I was taking more heat than I could handle? A suggestion I sometimes accept from others, but never from my own self.
+But then it occurred to me that I was perhaps too far from home. What if, by trying to develop such an app, I was taking on more than I could handle? A suggestion I sometimes accept from others, but never from my own self.
 
 So I decided to drop OpenSSL, embark on a journey to IETF and NIST, and write my TLS client from scratch.
 
