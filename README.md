@@ -5,7 +5,8 @@ How small can a TLS/crypto library be?
 Some time ago I was developing a web app for my own business, that should be fully web-based, but still communicate with peripherals on the client side.
 
 ## 2. Overview
-The client is written entirely in C. Two of the most common cipher suites for TLS 1.2 are implemented, i.e.TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA and TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA. TLS 1.3's TLS_AES_128_GCM_SHA256 and TLS_AES_256_GCM_SHA384 are also written in code, but have not been tested.
+The client is written entirely in **C**. Two of the most common cipher suites for TLS 1.2 are implemented, namely **TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA** and **TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA**.
+TLS 1.3's **TLS_AES_128_GCM_SHA256** and **TLS_AES_256_GCM_SHA384** are also written in code, but have not been tested.
 
 The client supports full TLS handshakes, exchange of application data, and session renegotiation.
 
