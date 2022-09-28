@@ -54,6 +54,6 @@ But then it occurred to me that I was perhaps too far from home. What if, by try
 
 So I decided to drop OpenSSL, embark on a journey to IETF and NIST, and write my TLS client from scratch.
 
-Through innumerable RFCs and NIST-pubs I wandered, far from Stack Overflow's cozy arms (indeed I sometimes found myself hopelessly googling like "keep getting bad_record_mac but cant find errors in sha256 anyone stackoverflow").
+Through innumerable RFCs and NIST-pubs I wandered.
 
 But, in the end, it worked, and is 0,35% the size of OpenSSL code.
