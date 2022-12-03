@@ -12,10 +12,11 @@ unsigned short bm_invx25519(unsigned long long n[4], unsigned long long result[4
 unsigned short bm_subtrx25519(unsigned long long a[4], unsigned long long b[4], unsigned long long result[4]);
 unsigned short bm_addx25519(const unsigned long long a[4], const unsigned long long b[4], unsigned long long result[4]);
 unsigned short bm_multx25519(const unsigned long long a[4], const unsigned long long b[4], unsigned long long result[4]);
-
+/*
 const unsigned long long bm_19[4];
 const unsigned long long bm_x25519[4];
 const unsigned long long bm_a24[4];
 const unsigned long long bm_9[4];
 const unsigned long long bm_x25519_a[4];
+*/
 #endif

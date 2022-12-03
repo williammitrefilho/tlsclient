@@ -1,3 +1,4 @@
+#include <string.h>
 #ifndef AES_H
 
 #define AES_H

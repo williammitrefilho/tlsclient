@@ -1,14 +1,15 @@
 #include <ber_entity.h>
 #include <p256.h>
 #include <prf.h>
-#include <winsock2.h>
+#include <socketimpl.h>
+#include <stdlib.h>
+#include <string.h>
 #include <converters.h>
 #include <gcm.h>
 #include <x25519.h>
 
-#ifndef TLSBASE_H
 
-#define TLSBASE_H
+#ifndef TLSBASE_H
 
 #define TLSM_CLIENT_HELLO 0x01
 #define TLSM_SERVER_HELLO 0x02
@@ -34,11 +35,13 @@
 
 #define TLSERROR_SOCKET_ERROR 0x0001
 
-unsigned short tls_last_error;
-unsigned char label_extended_master_secret[23];
-unsigned char label_key_expansion[14];
-unsigned char label_client_finished[16];
-unsigned char b_change_cipher_spec[6];
+#define TLSBASE_H
+
+//unsigned short tls_last_error;
+//unsigned char label_extended_master_secret[23];
+//unsigned char label_key_expansion[14];
+//unsigned char label_client_finished[16];
+//unsigned char b_change_cipher_spec[6];
 
 
 typedef struct TLSMessage{
@@ -123,7 +126,7 @@ typedef struct TLSClientKeyExchangeParams{
 
 typedef struct TLSClient{
     
-    SOCKET socket;
+    int socket;
     unsigned short prf_hash;
     unsigned char last_hello_msg;
     unsigned char last_received_handshake_msg;

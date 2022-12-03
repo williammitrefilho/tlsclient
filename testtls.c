@@ -4,8 +4,7 @@
 #include <string.h>
 int main(int argc, char *argv[]){
 	
-	WSADATA wsaData;
-	WSAStartup(MAKEWORD(2, 2), &wsaData);
+	socketStartup();
 	TLSClient *client = tls_connect("www.google.com", "443"); // Initiate and connect to remote server
 	
 	if(client){
@@ -23,6 +22,6 @@ int main(int argc, char *argv[]){
 		tls_free_client(client);
 	}
 	
-	WSACleanup();
+	socketCleanup();
 	return 0;
 }

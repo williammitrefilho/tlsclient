@@ -1,3 +1,4 @@
+#include <string.h>
 #ifndef GCM_H
 
 #define GCM_H

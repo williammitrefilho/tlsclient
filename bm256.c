@@ -1,5 +1,11 @@
-// William Mitre Filho - 2022
-// Uma implementação de operações aritméticas com números de 256 bits, para computações criptográficas
+/* ========================================================================== */
+/*                                                                            */
+/*   Filename.c                                                               */
+/*   (c) 2012 Author                                                          */
+/*                                                                            */
+/*   Description                                                              */
+/*                                                                            */
+/* ========================================================================== */
 
 #include <stdio.h>
 #include <string.h>

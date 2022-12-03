@@ -1,5 +1,6 @@
 // William Mitre Filho - 2022
 // Uma implementação do algoritmo AES em Galois Counter Mode, conforme definido pelo NIST (https://nvlpubs.nist.gov/nistpubs/Legacy/SP/nistspecialpublication800-38d.pdf)
+#include <gcm.h>
 #include <aes.h>
 
 #define GCM1_BYTE 1

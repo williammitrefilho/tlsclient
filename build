@@ -1,0 +1,19 @@
+sudo mkdir bins
+sudo mkdir built
+
+sudo gcc -I "include" -c sha.c -o bins/sha.o \
+&& sudo gcc -I "include" -c aes.c -o bins/aes.o \
+&& sudo  gcc -I "include" -c cbc.c -o bins/cbc.o \
+&& sudo  gcc -I "include" -c tlsbase.c -o bins/tlsbase.o \
+&& sudo  gcc -I "include" -c socketimpl.c -o bins/socketimpl.o \
+&& sudo  gcc -I "include" -c p256.c -o bins/p256.o \
+&& sudo  gcc -I "include" -c x25519.c -o bins/x25519.o \
+&& sudo  gcc -I "include" -c prf.c -o bins/prf.o \
+&& sudo  gcc -I "include" -c basics.c -o bins/basics.o \
+&& sudo  gcc -I "include" -c ber_entity.c -o bins/ber_entity.o \
+&& sudo  gcc -I "include" -c gcm.c -o bins/gcm.o \
+&& sudo  gcc -I "include" -c gzip.c -o bins/gzip.o \
+&& sudo  gcc -I "include" -c converters.c -o bins/converters.o \
+&& sudo  gcc -I "include" -c testtls.c -o bins/testtls.o \
+&& sudo  gcc -I "include" -c bm256.c -o bins/bm256.o \
+&& sudo cc bins/sha.o bins/aes.o bins/cbc.o bins/tlsbase.o bins/socketimpl.o bins/p256.o bins/x25519.o bins/bm256.o bins/prf.o bins/ber_entity.o bins/basics.o bins/gcm.o bins/gzip.o bins/converters.o bins/testtls.o -o built/tlsclient

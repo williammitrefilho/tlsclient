@@ -2,7 +2,7 @@
 
 #define BASICS_H
 
-const unsigned char hx_label[2];
+//const unsigned char hx_label[2];
 
 unsigned char charval(unsigned char c);
 unsigned short hex2bin(unsigned char* data, unsigned char* out, unsigned short *out_len);

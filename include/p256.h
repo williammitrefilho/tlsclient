@@ -1,24 +1,24 @@
 #ifndef B_P256_H
-#define B_P256_H
 
 #define b_mm b_mult_modp256
 #define b_sm b_subtr_modp256
 #define b_am b_add_modp256
-
-unsigned char b_p256m1[64];
-unsigned char b_p256[64];
-unsigned char b_dif21631[4];
-unsigned char b_zero[64];
-unsigned char b_p256_a[64];
-unsigned char b_p256_b[64];
-unsigned char b_p256_gx[64];
-unsigned char b_p256_gy[64];
-unsigned char b_1[64];
-unsigned char b_difp256[64];
-unsigned char b_p256m1[64];
-unsigned char b_p256[64];
-unsigned char b_p256p1[64];
-
+#define B_P256_H
+/*
+const unsigned char b_p256m1[64];
+const unsigned char b_p256[64];
+const unsigned char b_dif21631[4];
+const unsigned char b_zero[64];
+const unsigned char b_p256_a[64];
+const unsigned char b_p256_b[64];
+const unsigned char b_p256_gx[64];
+const unsigned char b_p256_gy[64];
+const unsigned char b_1[64];
+const unsigned char b_difp256[64];
+const unsigned char b_p256m1[64];
+const unsigned char b_p256[64];
+const unsigned char b_p256p1[64];
+*/
 
 unsigned short b_random(unsigned char* out);
 unsigned short b_subtr64(unsigned char* a, unsigned char*b, unsigned char* out);

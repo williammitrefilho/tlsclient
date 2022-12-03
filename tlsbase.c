@@ -1,17 +1,14 @@
 // William Mitre Filho - 2022
 // Um cliente TLS 1.2 (RFC 5246) minimalista.
 
-#include <ws2tcpip.h>
-#include <winsock2.h>
-#include <windows.h>
-#include <stdio.h>
-#include <p256.h>
-#include <sha.h>
-#include <cbc.h>
 #include <tlsbase.h>
-#include <time.h>
-#include <basics.h>
-#include <x25519.h>
+const unsigned long long tls_bm_9[4] = {
+    
+    0x0000000000000000,
+    0x0000000000000000,
+    0x0000000000000000,
+    0x0000000000000009 
+};
 
 unsigned short tls_last_error = 0;
 
@@ -42,28 +39,11 @@ unsigned short tls_free_cipher_spec(TLSCipherSpec *spec){
 
 TLSClient* tls_connect(unsigned char *server_name, unsigned char *port){
     
-    SOCKET s = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+    int s = findHostAddr(server_name, port);
+    
     if(!s){
         
-        printf("erro socket:%d\n", (int)GetLastError());
-        return 0;
-    }
-    struct addrinfo *pResult, hints;
-    ZeroMemory( &hints, sizeof(hints) );
-    hints.ai_family = AF_INET;
-    hints.ai_socktype = SOCK_STREAM;
-    hints.ai_protocol = IPPROTO_TCP;
-    int r = getaddrinfo((char*)server_name, (char*)port, &hints, &pResult);
-    if(r){
-        
-        printf("erro:%d\n", r);
-        return 0;
-    }
-    
-    r = connect(s, pResult->ai_addr, pResult->ai_addrlen);
-    if(r){
-        
-        printf("erro connect:%d (%d)\n", r, WSAGetLastError());
+        printf("erro connect:%d\n", s);
         return 0;    
     }
     
@@ -1368,9 +1348,9 @@ unsigned short tls_receive_application_data(TLSClient *client){
     printf("receiveing...\n");
     unsigned char hdr[5];
     int r = recv(client->socket, (char*)hdr, 5, MSG_WAITALL);
-    if(r == SOCKET_ERROR){
+    if(r < 0){
         
-        printf("socket error:%d\n", WSAGetLastError());
+        printf("socket error:%d\n", r);
         return 1;
     }
     printf("hdrapprec\n");printbhex(hdr, 5);printf("\n");
@@ -1468,9 +1448,9 @@ unsigned short tls_receive_messages(TLSClient *client){
     
     unsigned char hdr[5];
     int r = recv(client->socket, (char*)hdr, 5, MSG_WAITALL);
-    if(r == SOCKET_ERROR){
+    if(r < 0){
         
-        printf("socket error:%d\n", WSAGetLastError());
+        printf("socket error:%d\n", r);
         return 1;
     }
     
@@ -1820,7 +1800,7 @@ unsigned short tls_handshake(TLSClient *client, unsigned char *server_name, unsi
         unsigned long long lpx[4], lpk[4];
         x25519transform(privKey);
         btolongi(privKey, lpk);
-        bm_el25519(lpk, bm_9, lpx);
+        bm_el25519(lpk, tls_bm_9, lpx);
         longtobi(lpx, px);
         TLSMessage *cke = (TLSMessage*)malloc(sizeof(TLSMessage));
         cke->type = TLSM_CLIENT_KEY_EXCHANGE;
