@@ -11,9 +11,27 @@ TLS 1.3's **TLS_AES_128_GCM_SHA256** and **TLS_AES_256_GCM_SHA384** are also wri
 The client supports full TLS handshakes, exchange of application data, and session renegotiation.
 
 ## 3. Building
-Install **mingw**, than run ```build.bat``` on the command prompt.
+### Windows
+
+Install **mingw**, then:
+
+```
+git clone https://github.com/williammitrefilho/tlsclient
+cd tlsclient
+build
+```
+
+### Linux
+```
+sudo apt install gcc
+git clone https://github.com/williammitrefilho/tlsclient
+cd tlsclient
+bash build
+```
 
 ## 4. Testing
+The [testtls.c](https://github.com/williammitrefilho/tlsclient/blob/main/testtls.c) file contains the app's entry point, where there changes can be made for testing the TLS 1.2 trnsport layer with different overlying protocols, such as FTP, SMTP and IMAP.
+
 ```C
 #include <tlsbase.h>
 #include <string.h>
