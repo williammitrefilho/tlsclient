@@ -29,9 +29,9 @@ unsigned short tls_free_cipher_spec(TLSCipherSpec *spec){
     free(spec->server_write_key);
     free(spec);
     if(spec->other_params){
-        printf("freeing op\n");
+        printf("%s freeing op\n", logwarn());
         free(spec->other_params);
-        printf("freed\n");
+        printf("%s freed\n", logwarn());
     }
     
     return 0;
@@ -916,7 +916,7 @@ unsigned short tls_send_message(TLSClient *client, TLSMessage *message){
         }
         printf("trlen:%d\n", client->transcript_len);
         tls_free_client_messages(client);
-        printf("trlen2:%d\n", client->transcript_len);
+        printf("%s trlen2:%d\n", loglog(), client->transcript_len);
         tls_build_client_hello(message, 0, &ch_len);
         ch_record = (unsigned char*)malloc(ch_len+5);
         ch_data = ch_record;
