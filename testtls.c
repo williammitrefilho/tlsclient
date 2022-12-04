@@ -4,14 +4,13 @@
 #include <string.h>
 int main(int argc, char *argv[]){
 	
-	init_logger();
 	socketStartup();
 	TLSClient *client = tls_connect("www.google.com", "443"); // Initiate and connect to remote server
 	
 	if(client){
 		if(tls_handshake(client, "www.google.com", "443")){ // perform the TLS handshake
 			
-			printf("%s erro handshake\n", logerr());
+			printf("%s erro handshake\n");
 		}
 		else{
 			
@@ -24,6 +23,5 @@ int main(int argc, char *argv[]){
 	}
 	
 	socketCleanup();
-	clean_logger_up();
 	return 0;
 }

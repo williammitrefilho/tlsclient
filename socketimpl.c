@@ -12,6 +12,7 @@ int findHostAddr(char *addrstr, char *port){
 	hint.ai_canonname = 0;
 	hint.ai_addrlen = 0;
 	hint.ai_addr = 0;
+	hint.ai_flags = 0;
 	
 	int s = 0;
 	int r = getaddrinfo(addrstr, "", &hint, &addr_info);

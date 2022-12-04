@@ -1,4 +1,3 @@
-#include <logger.h>
 #include <ber_entity.h>
 #include <p256.h>
 #include <prf.h>
@@ -8,7 +7,7 @@
 #include <converters.h>
 #include <gcm.h>
 #include <x25519.h>
-#include <colorprint.h>
+//#include <colorprint.h>
 
 #ifndef TLSBASE_H
 
