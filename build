@@ -16,4 +16,5 @@ sudo gcc -I "include" -c sha.c -o bins/sha.o \
 && sudo  gcc -I "include" -c converters.c -o bins/converters.o \
 && sudo  gcc -I "include" -c testtls.c -o bins/testtls.o \
 && sudo  gcc -I "include" -c bm256.c -o bins/bm256.o \
-&& sudo cc bins/sha.o bins/aes.o bins/cbc.o bins/tlsbase.o bins/socketimpl.o bins/p256.o bins/x25519.o bins/bm256.o bins/prf.o bins/ber_entity.o bins/basics.o bins/gcm.o bins/gzip.o bins/converters.o bins/testtls.o -o built/tlsclient
+&& sudo  gcc -I "include" -c colorprint.c -o bins/colorprint.o \
+&& sudo cc bins/sha.o bins/aes.o bins/cbc.o bins/tlsbase.o bins/colorprint.o bins/socketimpl.o bins/p256.o bins/x25519.o bins/bm256.o bins/prf.o bins/ber_entity.o bins/basics.o bins/gcm.o bins/gzip.o bins/converters.o bins/testtls.o -o built/tlsclient

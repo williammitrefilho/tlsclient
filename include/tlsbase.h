@@ -1,4 +1,3 @@
-#include <logger.h>
 #include <ber_entity.h>
 #include <p256.h>
 #include <prf.h>

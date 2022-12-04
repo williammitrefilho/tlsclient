@@ -53,6 +53,17 @@ unsigned short hex2bin(unsigned char* data, unsigned char* out, unsigned short *
     return 0;
 }
 
+void printbhex(unsigned char *data, unsigned short len){
+    
+    for(int i = 0; i < len; i++){
+    
+        if(i%32== 0)
+            printf("\n");
+            
+        printf("%02X", data[i]);    
+    }
+}
+
 unsigned short bin2hex(unsigned char *data, unsigned short data_len, unsigned char *out){
     
     for(int i = 0; i < data_len;  i++){

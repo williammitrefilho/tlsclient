@@ -11,7 +11,8 @@ int main(int argc, char *argv[]){
 	if(client){
 		if(tls_handshake(client, "www.google.com", "443")){ // perform the TLS handshake
 			
-			printf("%s erro handshake\n", logerr());
+			printf("%s erro handshake. transcript:\n", logerr());
+			printbhex(client->transcript, client->transcript_len);printf("\n");
 		}
 		else{
 			

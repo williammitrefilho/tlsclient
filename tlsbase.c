@@ -105,17 +105,6 @@ unsigned short tls_set_ecdhe_private_key(TLSClient *client, unsigned char *ecdhe
     return 0;
 }
 
-void printbhex(unsigned char *data, unsigned short len){
-    
-    for(int i = 0; i < len; i++){
-    
-        if(i%16 == 0)
-            printf("\n");
-            
-        printf("%02X", data[i]);    
-    }
-}
-
 unsigned short tls_free_client_messages(TLSClient *client){
     
     for(int i = 0; i < client->n_messages; i++){
@@ -377,6 +366,7 @@ unsigned short tls_compute_secrets(TLSClient *client){
         }*/
         printf("generating key...\n");
         b_p256_gen_key(privateKey, spx, spy, px, py);
+	printf("%s key generated.\n", loglog());
         pre_master_secret += 32;
     }
     else if(skeParams->ecdhe_group == TLS_ECDHE_X25519){
@@ -404,15 +394,14 @@ unsigned short tls_compute_secrets(TLSClient *client){
         btolongi(spx, u);
         
         bm_el25519(k, u, u1);
+	printf("%s key generated.\n", loglog());
         longtobi(u1, px);
     }
+    printf("%s checking params...\n", loglog());
     if(shParams->cipher_suite == TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA){
         
         unsigned char transcript_hash[32];
         sha256_b(client->transcript, client->transcript_len, transcript_hash);
-        FILE *arq = fopen("transcript-t.bn", "wb");
-        fwrite(client->transcript, 1, client->transcript_len, arq);
-        fclose(arq);
         printf("premaster:\n");printbhex(pre_master_secret, 32);printf("\n");
         
         printf("transcript hash:\n");printbhex(transcript_hash, 32);printf("\n");
@@ -445,13 +434,6 @@ unsigned short tls_compute_secrets(TLSClient *client){
         sha_sha256_prf(client->nextSpec->master_secret, 48, label_key_expansion, sizeof(label_key_expansion) - 1, server_client_random, 64, 104, key_block);
         printf("key block:\n");printbhex(key_block, 104);printf("\n");
         
-        arq = fopen("key_material/key_block.bn", "wb");
-        fwrite(key_block, 1, 104, arq);
-        fclose(arq);
-        arq = fopen("key_material/server_client_random.bn", "wb");
-        fwrite(server_client_random, 1, 64, arq);
-        fclose(arq);
-        
         client->nextSpec->client_write_mac_key = (unsigned char*)malloc(20);
         memcpy(client->nextSpec->client_write_mac_key, client_write_mac_key, 20);
         client->nextSpec->client_write_mac_key_len = 20;
@@ -473,29 +455,12 @@ unsigned short tls_compute_secrets(TLSClient *client){
         
         unsigned char transcript_hash[48];
         sha_sha384(client->transcript, client->transcript_len, transcript_hash);
-        FILE *arq = fopen("transcripts/transcript-t.bn", "wb");
-        fwrite(client->transcript, 1, client->transcript_len, arq);
-        fclose(arq);
         printf("premaster:\n");printbhex(pre_master_secret, 32);printf("\n");
         
         printf("transcript hash:\n");printbhex(transcript_hash, 48);printf("\n");
         client->nextSpec->master_secret = (unsigned char*)malloc(48);
         sha384_prf(pre_master_secret, 32, "extended master secret", 22, transcript_hash, 48, 48, client->nextSpec->master_secret);
         printf("master secret:\n");printbhex(client->nextSpec->master_secret, 48);printf("\n");
-        
-        arq = fopen("key_material/pre_master_secret.bn", "wb");
-        fwrite(pre_master_secret, 1, 32, arq);
-        fclose(arq);
-        
-        arq = fopen("key_material/transcript_hash.bn", "wb");
-        fwrite(transcript_hash, 1, 48, arq);
-        fclose(arq);
-        
-        arq = fopen("key_material/master_secret.bn", "wb");
-        fwrite(client->nextSpec->master_secret, 1, 48, arq);
-        fclose(arq);
-    
-        client->nextSpec->master_secret_len = 48;
         
         unsigned char key_block[72],
                         *client_write_mac_key = key_block,
@@ -521,13 +486,6 @@ unsigned short tls_compute_secrets(TLSClient *client){
         
         sha384_prf(client->nextSpec->master_secret, 48, "key expansion", 14 - 1, server_client_random, 64, 72, key_block);
         printf("key block:\n");printbhex(key_block, 72);printf("\n");
-        
-        arq = fopen("key_material/key_block.bn", "wb");
-        fwrite(key_block, 1, 72, arq);
-        fclose(arq);
-        arq = fopen("key_material/server_client_random.bn", "wb");
-        fwrite(server_client_random, 1, 64, arq);
-        fclose(arq);
         
         client->nextSpec->client_write_key = (unsigned char*)malloc(32);
         memcpy(client->nextSpec->client_write_key, client_write_key, 32);
@@ -843,7 +801,7 @@ TLSMessage* tls_finished(TLSClient *client){
     printf("allocating...\n");
     unsigned char *verify_data = (unsigned char*)malloc(12), transcript_hash[48];
     printf("master_secret(%d):", client->currentSpec);printbhex(client->currentSpec->master_secret, client->currentSpec->master_secret_len);printf("\n");
-    printf("hashing...\n");
+    printf("%s hashing...\n", loglog());
     if(client->currentSpec->cipher_suite == TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA)
         sha256_b(client->transcript, client->transcript_len, transcript_hash);
     if(client->currentSpec->cipher_suite == TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384)
@@ -855,10 +813,7 @@ TLSMessage* tls_finished(TLSClient *client){
     if(client->currentSpec->cipher_suite == TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384)
         sha384_prf(client->currentSpec->master_secret, client->currentSpec->master_secret_len, label_client_finished, 15, transcript_hash, 48, 12, verify_data);
     
-    printf("verify data:\n");printbhex(verify_data, 12);printf("\n");
-    FILE *arq = fopen("key_material/verify_data.bn", "wb");
-    fwrite(verify_data, 1, 12, arq);
-    fclose(arq);
+    printf("%s verify data:\n", loglog());printbhex(verify_data, 12);printf("\n");
 //    printf("mac key");printbhex(client->currentSpec->client_write_mac_key, client->currentSpec->client_write_mac_key_len);printf("\n");    
     TLSMessage *finished = (TLSMessage*)malloc(sizeof(TLSMessage));
     finished->type = TLSM_FINISHED;
@@ -868,6 +823,7 @@ TLSMessage* tls_finished(TLSClient *client){
         free(client->verify_data);
     
     client->verify_data = verify_data;
+    printf("%s returning finished message...\n", loglog());
 
     return finished;
 }
@@ -918,10 +874,12 @@ unsigned short tls_send_message(TLSClient *client, TLSMessage *message){
         tls_free_client_messages(client);
         printf("%s trlen2:%d\n", loglog(), client->transcript_len);
         tls_build_client_hello(message, 0, &ch_len);
+        printf("%s client hello length:%d\n", loglog(), ch_len);
         ch_record = (unsigned char*)malloc(ch_len+5);
         ch_data = ch_record;
         ch_data += 5;
         tls_build_client_hello(message, ch_data, &ch_len);
+        printf("%s client hello written.\n", loglog());
     }
     else if(message->type == TLSM_CLIENT_KEY_EXCHANGE){
         
@@ -940,6 +898,7 @@ unsigned short tls_send_message(TLSClient *client, TLSMessage *message){
         ch_data = ch_record;
         ch_data += 5;
         tls_build_finished(message, ch_data, &ch_len);
+	printf("%s built finished\n", loglog());
     }
     else if(message->type == TLSM_CERTIFICATE){
         
@@ -1074,9 +1033,6 @@ unsigned short tls_send_message(TLSClient *client, TLSMessage *message){
                 
                 pblock[i] = padding_len & 0xFF;
             }
-            FILE *arq = fopen("key_material/iv.bn", "wb");
-            fwrite(iv, 1, 16, arq);
-            fclose(arq);
             memcpy(pciphered, iv, 16);
             pciphered += 16;
 //            printf("cbc block:\n");printbhex(cbc_block, cbc_block_len1+padding_len);printf("\n");
@@ -1124,17 +1080,6 @@ unsigned short tls_send_message(TLSClient *client, TLSMessage *message){
                 output[5+i] = nonce[i];
                 iv[4+i] = nonce[i];
             }
-            FILE *arq = fopen("key_material/ad.bn", "wb");
-            fwrite(ad, 1, 12+1, arq);
-            fclose(arq);
-            
-            arq = fopen("key_material/nonce.bn", "wb");
-            fwrite(nonce, 1, 8, arq);
-            fclose(arq);
-            
-            arq = fopen("key_material/ch.bn", "wb");
-            fwrite(ch_data, 1, ch_len, arq);
-            fclose(arq);
             
 //            printf("iv:\n");printbhex(iv, 12);printf("\n");
             gcm_aes256_gcm(iv, 12, client->currentSpec->client_write_key, ch_data, ch_len, ad, 12+1, cip, tag, 16);
@@ -1151,12 +1096,9 @@ unsigned short tls_send_message(TLSClient *client, TLSMessage *message){
 //        printbhex(ch_record, ch_len+5);
         send(client->socket, (char*)ch_record, ch_len+5, 0);
     }
-    
-    printf("\n");
+    printf("%s writing new transcript(%d bytes long)...\n\n", loglog(), client->transcript_len + ch_len);
+//    printf("\n");
     unsigned char *new_transcript = (unsigned char*)malloc(client->transcript_len + ch_len);
-    FILE *arq = fopen("transcripts/last_sent_message.bn", "wb");
-    fwrite(ch_record, 1, ch_len+5, arq);
-    fclose(arq);
     if(client->transcript_len > 0){
         
         memcpy(new_transcript, client->transcript, client->transcript_len);
@@ -1166,10 +1108,11 @@ unsigned short tls_send_message(TLSClient *client, TLSMessage *message){
     new_transcript += client->transcript_len;
     memcpy(new_transcript, ch_data, ch_len);
     new_transcript -= client->transcript_len;
-    
+    printf("%s new transcript written.\n", loglog());
     client->transcript = new_transcript;
     client->transcript_len += ch_len;
     free(ch_record);
+    printf("%s freed record.\n", loglog());
     return 0;
 }
 
@@ -1740,16 +1683,15 @@ unsigned short tls_handshake(TLSClient *client, unsigned char *server_name, unsi
         }
     }
     tls_send_message(client, clientHello);
+    printf("%s client hello sent.\n", loglog());
     int nt = 0;
-    FILE *arq = fopen("transcripts/last_client_hello.bn", "wb");
-    fwrite(client->transcript, 1, client->transcript_len, arq);
-    fclose(arq);
     
     if(tls_receive_messages(client)){
         
         printf("erro hs\n");
         return 1;
     }
+    printf("%s messages received.\n", loglog());
     
     while(client->last_hello_msg != 0x0E){
         
@@ -1829,15 +1771,13 @@ unsigned short tls_handshake(TLSClient *client, unsigned char *server_name, unsi
     tls_set_ecdhe_private_key(client, ecdhe_private_key, 32);
     printf("ecdhe_private_key:\n");printbhex(client->nextSpec->ecdhe_private_key, 32);printf("\n");
     tls_compute_secrets(client);
+    printf("%s secrets computed.\n", loglog());
     tls_send_change_cipher_spec(client);
     tls_send_message(client, tls_finished(client));
     printf("receivenow\n");
     if(tls_receive_messages(client)){
         
         printf("erro hs1\n");
-        FILE *arq1 = fopen("transcripts/last_error_transcript.bn", "wb");
-        fwrite(client->transcript, 1, client->transcript_len, arq1);
-        fclose(arq1);
         return 1;
     }
     printf("okr\n");
